@@ -12,8 +12,8 @@
 --[[
       INSTALL INSTRUCTIONS:
       1) local keym = require("keym/widget")                      -- put somewhere near top of awesome rc.lua
-      2) right_layout:add(mkeys)                                  -- put in your wibox to add visual mode button
-      3) awful.key({ }, "`", function () mkeys.Toggle() end),     -- put somewhere in globalKeys to bind it
+      2) right_layout:add(keym)                                   -- put in your wibox to add visual mode button
+      3) awful.key({ }, "`", function () keym.Toggle() end),      -- put somewhere in globalKeys to bind it
       4) script requires "xdotool" installed for mouse clicks, scrolls etc
 
       USAGE INSTRUCTIONS:
