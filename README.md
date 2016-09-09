@@ -1,11 +1,11 @@
-#Keym
-I find using a mouse painful, so made this responsive widget to act as a powerful mouse replacement using the keyboard. The widget has two modes, normal "keys" mode and "mouse" mode. When in mouse mode, all typical keyboard inputs are gobbled up and replaced with a powerful interface for manipulating the cursor at different speeds. 
+# Keym
+I find using a mouse painful, so made this responsive widget to act as a powerful mouse replacement using the keyboard. The widget has two modes, normal "keys" mode and "mouse" mode. When in mouse mode, all typical keyboard inputs are gobbled up and replaced with a powerful interface for manipulating the cursor at different speeds.
 
 ## INSTALL INSTRUCTIONS:
-1. create a folder next to awesome/rc.lua called "keym" and extract widget.lua into it
-2. local keym = require("keym/widget")                      -- put somewhere near top of awesome rc.lua
-3. right_layout:add(keym)                                  -- put in your wibox to add visual mode button
-4. awful.key({ }, "`", function () keym.Toggle() end),     -- put somewhere in globalKeys to bind it
+1. clone next to awesome/rc.lua (there should be a folder called "keym" with widget.lua inside next to rc.lua)
+2. local keym = require("keym/widget")                     -- put somewhere near top of awesome rc.lua
+3. right_layout:add(keym)                                  -- put in your wibox to add visual mode button to rc.lua
+4. awful.key({ }, "`", function () keym.Toggle() end),     -- put somewhere in globalKeys to bind it to rc.lua
 5. script requires "xdotool" installed for the majority of features: mouse clicks, scrolls etc
 
 ## USAGE INSTRUCTIONS:
