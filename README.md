@@ -4,8 +4,8 @@ I find using a mouse painful, so made this responsive widget to act as a powerfu
 ## INSTALL INSTRUCTIONS:
 1. create a folder next to awesome/rc.lua called "keym" and extract widget.lua into it
 2. local keym = require("keym/widget")                      -- put somewhere near top of awesome rc.lua
-3. right_layout:add(mkeys)                                  -- put in your wibox to add visual mode button
-4. awful.key({ }, "`", function () mkeys.Toggle() end),     -- put somewhere in globalKeys to bind it
+3. right_layout:add(keym)                                  -- put in your wibox to add visual mode button
+4. awful.key({ }, "`", function () keym.Toggle() end),     -- put somewhere in globalKeys to bind it
 5. script requires "xdotool" installed for the majority of features: mouse clicks, scrolls etc
 
 ## USAGE INSTRUCTIONS:
