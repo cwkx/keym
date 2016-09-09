@@ -9,21 +9,6 @@
    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 --]]
 
---[[
-      INSTALL INSTRUCTIONS:
-      1) local keym = require("keym/widget")                      -- put somewhere near top of awesome rc.lua
-      2) right_layout:add(keym)                                   -- put in your wibox to add visual mode button
-      3) awful.key({ }, "`", function () keym.Toggle() end),      -- put somewhere in globalKeys to bind it
-      4) script requires "xdotool" installed for mouse clicks, scrolls etc
-
-      USAGE INSTRUCTIONS:
-      1) keym is intended to be flexible to one-handed, or two-handed usage
-      2) typical two-handed use is: WASD=move, J=click, K=right-click RF=scroll, ;speed1, '=speed2
-      3) left-handed only use is: WASD=move, Q=click, E=right-click, RF=scroll, \=speed1, z=speed2
-      4) right-handed only use is limited: Arrows=move, Return=click, /=speed1
-      5) why no vim-mode bindings? moving along diagnols causes finger-collisions, but do otherwise remap
---]]
-
 -- Configuration variables, inspired by the APW widget
 local keyRange       = {3,12,30}
 local keySpeed       = 3;
@@ -45,6 +30,7 @@ local spawn_with_shell = awful.util.spawn_with_shell or awful.spawn.with_shell
 local wibox = require("wibox")
 local math = require("math")
 local bar = awful.widget.progressbar()
+local naughty = require("naughty")
 bar:set_width(width)
 
 local function make_stack(w1, w2)
@@ -66,7 +52,7 @@ local widget
 local text
 local barw = 0
 local scrlSkip = 0
-local keyDelta = {0,0,0,0,0,0}
+local keyDelta = {0,0,0,0,0,0,0,0}
 local keyTimer = timer({ timeout=0.01})
 
 keyTimer:connect_signal("timeout", function()
@@ -77,6 +63,9 @@ keyTimer:connect_signal("timeout", function()
     if (keyDelta[6] ~= 0) then awful.util.spawn_with_shell("xdotool click 5") end
   end
   scrlSkip = scrlSkip + 1
+  if (keyDelta[7] ~= 0 or keyDelta[8] ~= 0) then
+    awful.tag.incmwfact( 0.008 * (keyDelta[8]-keyDelta[7]))
+  end
 end)
 
 local mskeysFun = function(mod, key, event)
@@ -90,7 +79,9 @@ local mskeysFun = function(mod, key, event)
     elseif key == 'j' or key == 'q'     or key == 'Return' then awful.util.spawn_with_shell("xdotool mouseup 1")
     elseif key == 'k' or key == 'e'     then awful.util.spawn_with_shell("xdotool mouseup 3")
     elseif key == 'r' then keyDelta[5] = 0
-    elseif key == 'f' then keyDelta[6] = 0 end
+    elseif key == 'f' then keyDelta[6] = 0
+    elseif key == 'n' then keyDelta[7] = 0
+    elseif key == 'm' then keyDelta[8] = 0 end
   elseif event == "press" then
     if     key == ';' or key == '\\' or key == '/' then keySpeed = keyRange[2]; bar:set_value(0.5)
     elseif key == 'g' or key == '\'' or key == 'z' then keySpeed = keyRange[3]  bar:set_value(1.0)
@@ -102,7 +93,10 @@ local mskeysFun = function(mod, key, event)
     elseif key == 'k' or key == 'e' then awful.util.spawn_with_shell("xdotool mousedown 3")
     elseif key == 'r' then keyDelta[5] = 1
     elseif key == 'f' then keyDelta[6] = 1
-    elseif key == '`' then keys=false widget.Toggle() end
+    elseif key == '`' then keys=false widget.Toggle()
+    elseif key == 'i' then awful.util.spawn_with_shell("xdotool click 2")
+    elseif key == 'n' then keyDelta[7] = 1
+    elseif key == 'm' then keyDelta[8] = 1 end
   end
 end
 
