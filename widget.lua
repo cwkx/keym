@@ -10,7 +10,7 @@
 --]]
 
 -- Configuration variables, inspired by the APW widget
-local keyRange       = {3,12,30}
+local keyRange       = {1,3,12,30}
 local keySpeed       = 3;
 local width          = 45        -- width in pixels of progressbar
 local margin_right   = 3         -- right margin in pixels of progressbar
@@ -50,14 +50,13 @@ keys = true
 local grabber
 local widget
 local text
-local barw = 0
 local scrlSkip = 0
 local keyDelta = {0,0,0,0,0,0,0,0}
 local keyTimer = timer({ timeout=0.01})
 
 keyTimer:connect_signal("timeout", function()
   mouse.coords({x=mouse.coords().x+(keyDelta[2]-keyDelta[1])*keySpeed,y=mouse.coords().y+(keyDelta[4]-keyDelta[3])*keySpeed})
-  local scrlMod = keySpeed>keyRange[1] and 1 or 3 -- numbers 1 or 3 here controls scroll skip, change for different scroll speeds
+  local scrlMod = keySpeed>keyRange[2] and 1 or 3 -- numbers 1 or 3 here controls scroll skip, change for different scroll speeds
   if (scrlSkip % scrlMod == 0) then
     if (keyDelta[5] ~= 0) then awful.util.spawn_with_shell("xdotool click 4") end
     if (keyDelta[6] ~= 0) then awful.util.spawn_with_shell("xdotool click 5") end
@@ -71,7 +70,7 @@ end)
 local mskeysFun = function(mod, key, event)
 
   if event == "release" then
-    if     key == ';' or key == '\\' or key == '/' or key =='z' or key == 'g' or key == '\'' then keySpeed = keyRange[1] bar:set_value(0)
+    if     key == ';' or key == '\\' or key == '/' or key =='z' or key == 'g' or key == '\'' or key =='h' then keySpeed = keyRange[2] bar:set_value(0)
     elseif key == 'w' or key == 'Up'    then keyDelta[3] =  0
     elseif key == 's' or key == 'Down'  then keyDelta[4] =  0
     elseif key == 'a' or key == 'Left'  then keyDelta[1] =  0
@@ -83,8 +82,9 @@ local mskeysFun = function(mod, key, event)
     elseif key == 'n' then keyDelta[7] = 0
     elseif key == 'm' then keyDelta[8] = 0 end
   elseif event == "press" then
-    if     key == ';' or key == '\\' or key == '/' then keySpeed = keyRange[2]; bar:set_value(0.5)
-    elseif key == 'g' or key == '\'' or key == 'z' then keySpeed = keyRange[3]  bar:set_value(1.0)
+    if     key == ';' or key == '\\' or key == '/' then keySpeed = keyRange[3] bar:set_value(0.5)
+    elseif key == 'g' or key == '\'' or key == 'z' then keySpeed = keyRange[4] bar:set_value(1.0)
+    elseif key == 'h' then keySpeed = keyRange[1] bar:set_value(0)
     elseif key == 'w' or key == 'Up'    then keyDelta[3] =  1
     elseif key == 's' or key == 'Down'  then keyDelta[4] =  1
     elseif key == 'a' or key == 'Left'  then keyDelta[1] =  1
@@ -119,7 +119,6 @@ function widget.setColor()
 end
 
 local function _update()
-  bar:set_value(barw)
   widget:setColor()
   if show_text then
       local state_txt = "Mouse"
