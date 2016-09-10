@@ -70,7 +70,7 @@ end)
 local mskeysFun = function(mod, key, event)
 
   if event == "release" then
-    if     key == ';' or key == '\\' or key == '/' or key =='z' or key == 'g' or key == '\'' or key =='h' then keySpeed = keyRange[2] bar:set_value(0)
+    if     key == ';' or key == '\\' or key == '/' or key =='z' or key == 'g' or key == '\'' or key =='h' then keySpeed = keyRange[2] bar:set_value(0) text:set_markup('<span color="'..text_color..'">Mouse</span>')
     elseif key == 'w' or key == 'Up'    then keyDelta[3] =  0
     elseif key == 's' or key == 'Down'  then keyDelta[4] =  0
     elseif key == 'a' or key == 'Left'  then keyDelta[1] =  0
@@ -82,9 +82,9 @@ local mskeysFun = function(mod, key, event)
     elseif key == 'n' then keyDelta[7] = 0
     elseif key == 'm' then keyDelta[8] = 0 end
   elseif event == "press" then
-    if     key == ';' or key == '\\' or key == '/' then keySpeed = keyRange[3] bar:set_value(0.5)
-    elseif key == 'g' or key == '\'' or key == 'z' then keySpeed = keyRange[4] bar:set_value(1.0)
-    elseif key == 'h' then keySpeed = keyRange[1] bar:set_value(0)
+    if     key == ';' or key == '\\' or key == '/' then keySpeed = keyRange[3] bar:set_value(0.5) text:set_markup('<span color="'..text_color..'">Fast</span>')
+    elseif key == 'g' or key == '\'' or key == 'z' then keySpeed = keyRange[4] bar:set_value(1.0) text:set_markup('<span color="'..text_color..'">Dash</span>')
+    elseif key == 'h' then keySpeed = keyRange[1] bar:set_value(0) text:set_markup('<span color="'..text_color..'">Slow</span>')
     elseif key == 'w' or key == 'Up'    then keyDelta[3] =  1
     elseif key == 's' or key == 'Down'  then keyDelta[4] =  1
     elseif key == 'a' or key == 'Left'  then keyDelta[1] =  1
