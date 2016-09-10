@@ -56,7 +56,7 @@ local keyTimer = timer({ timeout=0.01})
 
 keyTimer:connect_signal("timeout", function()
   mouse.coords({x=mouse.coords().x+(keyDelta[2]-keyDelta[1])*keySpeed,y=mouse.coords().y+(keyDelta[4]-keyDelta[3])*keySpeed})
-  local scrlMod = keySpeed>keyRange[2] and 1 or 3 -- numbers 1 or 3 here controls scroll skip, change for different scroll speeds
+  local scrlMod = keySpeed>keyRange[2] and 1 or (keySpeed>keyRange[1] and 3 or 6) -- numbers 1 or 3 here controls scroll skip, change for different scroll speeds
   if (scrlSkip % scrlMod == 0) then
     if (keyDelta[5] ~= 0) then awful.util.spawn_with_shell("xdotool click 4") end
     if (keyDelta[6] ~= 0) then awful.util.spawn_with_shell("xdotool click 5") end
