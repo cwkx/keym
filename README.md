@@ -16,14 +16,15 @@ I've been using this for 4 months now and am very happy with it, there's just a 
 5. script requires "xdotool" installed for the majority of features: mouse clicks, scrolls etc
 
 ## Usage Instructions
-1. keym is intended to be flexible to one-handed, or two-handed usage
-2. typical two-handed use is: WASD=move, J=click, K=right-click RF=scroll, ;speed1, '=speed2
+1. Press the backtick key ` to toggle keym mode ON/OFF.
+2. keym is intended to be flexible to one-handed, or two-handed usage
+2. typical two-handed use is: WASD=move, J=click, K=right-click RF=scroll, ;speed1, '=speed2, h=slow
 3. left-handed only use is: WASD=move, Q=click, E=right-click, RF=scroll, \=speed1, z=speed2
 4. right-handed only use is limited: Arrows=move, Return=click, /=speed1
 5. why no vim-mode bindings? moving along diagnols causes finger-collisions, but do otherwise remap
 
 ## Roadmap
-1. Fix some rare bugs, possibly with xdotool - e.g. it runs slowly in firefox and sometimes 
+1. Fix some rare bugs, possibly with xdotool - e.g. it runs slowly in firefox and sometimes locks
 2. Send through other main keys (spacebar, backspace, delete)
 3. Find otherways to save/load common mouse locations and optimize clicking on nearby buttons etc
 
