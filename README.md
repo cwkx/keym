@@ -1,5 +1,8 @@
 # Keym
-I find using a mouse painful, so made this responsive widget to act as a powerful mouse replacement using the keyboard. The widget has two modes, normal "keys" mode and "mouse" mode. When in mouse mode, all typical keyboard inputs are gobbled up and replaced with a powerful interface for manipulating the "mouse" at different speeds.
+I find using a mouse painful, so made this responsive widget to act as a mouse alternative/replacement using the keyboard. The widget has two modes, normal "keys" mode and "mouse" mode. When in mouse mode, all typical keyboard inputs are gobbled up and replaced with a powerful interface for manipulating the "mouse" at different speeds.
+
+## Usage update after 4 months
+I've been using this for 4 months now and am very happy with it, there's just a couple of bugs that crop up and i'm not sure what causes them; if anyone else starts using this i'd appreciate help finding these. In general, Keym greatly enhances my general laptop/desktop usage. I've actually found that I end up using it alongside a mouse/trackpad. In particular, being able to control the mouse just with my left hand is very useful so I can still browse the computer while leaning on my right hand etc. Fast scrolling with 'F' and 'R' keys is great.
 
 ## Requirements
 1. Awesome WM
@@ -20,8 +23,9 @@ I find using a mouse painful, so made this responsive widget to act as a powerfu
 5. why no vim-mode bindings? moving along diagnols causes finger-collisions, but do otherwise remap
 
 ## Roadmap
-1. Send through other main keys (spacebar, backspace, delete)
-2. Save/load mouse locations
+1. Fix some rare bugs, possibly with xdotool - e.g. it runs slowly in firefox and sometimes 
+2. Send through other main keys (spacebar, backspace, delete)
+3. Find otherways to save/load common mouse locations and optimize clicking on nearby buttons etc
 
 Please let me know if you find this useful, or if you find any bugs/have suggestions.
 - Chris G. Willcocks
