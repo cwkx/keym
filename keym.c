@@ -7,12 +7,12 @@ static const int speeds[5] = {80, 400, 1400, 4000, 10000};
 static const int scroll[5] = {1000, 5000, 30000, 50000, 100000};
 
 static Display *display;
-static char keymap[32] = { 0 };
+static char keymap[32] = {0};
 
 char pressed(int keycode)
 {
     KeyCode c = XKeysymToKeycode(display, keycode);
-	return ( keymap[c/8] & (1 << c%8) ) > 0;
+    return (keymap[c / 8] & (1 << c % 8)) > 0;
 }
 
 int main()
@@ -25,9 +25,9 @@ int main()
     int screen;
     int x11_fd;
     int num_ready_fds;
-    char key_delta[6] = { 0 }; /* left, right, up, down, scroll up, scroll down */
-    char speed = 2; /* dash, fast, normal, slow, crawl */
     char idle = 1;
+    char key_delta[6] = {0}; /* left, right, up, down, scroll up, scroll down */
+    char speed = 2;          /* dash, fast, normal, slow, crawl */
 
     if (!(display = XOpenDisplay(NULL)))
     {
@@ -50,7 +50,6 @@ int main()
 
         tv.tv_sec = 0;
         tv.tv_usec = (key_delta[4] || key_delta[5]) ? scroll[speed] : idle ? 50000 : speeds[speed];
-
         num_ready_fds = select(x11_fd + 1, &in_fds, NULL, NULL, &tv);
 
         XGrabKeyboard(display, window, False, GrabModeAsync, GrabModeAsync, CurrentTime);
@@ -72,7 +71,7 @@ int main()
 
         /* speed adjustment from slow to fast */
         speed = 2;
-        speed = (pressed(XK_g)) ? 4 : speed;        
+        speed = (pressed(XK_g)) ? 4 : speed;
         speed = (pressed(XK_h) || pressed(XK_backslash)) ? 3 : speed;
         speed = (pressed(XK_l) || pressed(XK_Shift_L)) ? 1 : speed;
         speed = (pressed(XK_semicolon)) ? 0 : speed;
@@ -87,7 +86,7 @@ int main()
         /* exit */
         if (e.type == KeyRelease)
         {
-            k = XLookupKeysym(&e.xkey, 0);    
+            k = XLookupKeysym(&e.xkey, 0);
             if (k == XK_x || k == XK_m)
             {
                 XCloseDisplay(display);
