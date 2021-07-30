@@ -69,6 +69,12 @@ int main()
                 XTestFakeButtonEvent(display, Button1, (e.type == KeyPress) ? True : False, CurrentTime);
             if (k == XK_k || k == XK_e)
                 XTestFakeButtonEvent(display, Button3, (e.type == KeyPress) ? True : False, CurrentTime);
+            if (k == XK_i)
+                XTestFakeButtonEvent(display, Button2, (e.type == KeyPress) ? True : False, CurrentTime);
+            if (k == XK_u)
+                XTestFakeButtonEvent(display, 8, (e.type == KeyPress) ? True : False, CurrentTime);
+            if (k == XK_o)
+                XTestFakeButtonEvent(display, 9, (e.type == KeyPress) ? True : False, CurrentTime);
 
             /* scrolling */
             if (k == XK_r)
@@ -96,7 +102,7 @@ int main()
         }
 
         idle = 1;
-        
+
         if (key_delta[0] || key_delta[1] || key_delta[2] || key_delta[3])
         {
             XWarpPointer(display, None, None, 0, 0, 0, 0, (key_delta[1] - key_delta[0]), (key_delta[3] - key_delta[2]));

@@ -1,5 +1,5 @@
-# swarp version
-VERSION = 0.1
+# keym version
+VERSION = 1.0
 
 # Customize below to fit your system
 
