@@ -1,4 +1,4 @@
-# dynamic mouse
+# keym
 
 include config.mk
 

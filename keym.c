@@ -6,9 +6,17 @@
 static const int speeds[5] = {80, 400, 1400, 4000, 10000};
 static const int scroll[5] = {1000, 5000, 30000, 50000, 100000};
 
+static Display *display;
+static char keymap[32] = { 0 };
+
+char pressed(int keycode)
+{
+    KeyCode c = XKeysymToKeycode(display, keycode);
+	return ( keymap[c/8] & (1 << c%8) ) > 0;
+}
+
 int main()
 {
-    Display *display;
     Window window;
     XEvent e;
     KeySym k;
@@ -17,8 +25,8 @@ int main()
     int screen;
     int x11_fd;
     int num_ready_fds;
-    char key_delta[6] = { 0 }; /* Left, Right, Up, Down, SCROLL_UP, SCROLL_DOWN */
-    char speed = 2; /* Dash, Fast, Normal, Slow, Crawl */
+    char key_delta[6] = { 0 }; /* left, right, up, down, scroll up, scroll down */
+    char speed = 2; /* dash, fast, normal, slow, crawl */
     char idle = 1;
 
     if (!(display = XOpenDisplay(NULL)))
@@ -41,7 +49,7 @@ int main()
         FD_SET(x11_fd, &in_fds);
 
         tv.tv_sec = 0;
-        tv.tv_usec = (key_delta[4] || key_delta[5]) ? scroll[speed] : idle ? 10000 : speeds[speed];
+        tv.tv_usec = (key_delta[4] || key_delta[5]) ? scroll[speed] : idle ? 50000 : speeds[speed];
 
         num_ready_fds = select(x11_fd + 1, &in_fds, NULL, NULL, &tv);
 
@@ -50,50 +58,37 @@ int main()
         while (XPending(display))
             XNextEvent(display, &e);
 
-        if ((e.type == KeyPress) || (e.type == KeyRelease))
+        XQueryKeymap(display, keymap);
+
+        /* mouse movement */
+        key_delta[0] = pressed(XK_Left)  || pressed(XK_a);
+        key_delta[1] = pressed(XK_Right) || pressed(XK_d);
+        key_delta[2] = pressed(XK_Up)    || pressed(XK_w);
+        key_delta[3] = pressed(XK_Down)  || pressed(XK_s);
+
+        /* scrolling */
+        key_delta[4] = pressed(XK_r);
+        key_delta[5] = pressed(XK_f);
+
+        /* speed adjustment from slow to fast */
+        speed = 2;
+        speed = (pressed(XK_g)) ? 4 : speed;        
+        speed = (pressed(XK_h) || pressed(XK_backslash)) ? 3 : speed;
+        speed = (pressed(XK_l) || pressed(XK_Shift_L)) ? 1 : speed;
+        speed = (pressed(XK_semicolon)) ? 0 : speed;
+
+        /* mouse clicks */
+        XTestFakeButtonEvent(display, Button1, (pressed(XK_j) || pressed(XK_q)) ? True : False, CurrentTime);
+        XTestFakeButtonEvent(display, Button3, (pressed(XK_k) || pressed(XK_e)) ? True : False, CurrentTime);
+        XTestFakeButtonEvent(display, Button2, pressed(XK_i) ? True : False, CurrentTime);
+        XTestFakeButtonEvent(display, 8, pressed(XK_u) ? True : False, CurrentTime);
+        XTestFakeButtonEvent(display, 9, pressed(XK_o) ? True : False, CurrentTime);
+
+        /* exit */
+        if (e.type == KeyRelease)
         {
-            k = XLookupKeysym(&e.xkey, 0);
-
-            /* mouse movement */
-            if (k == XK_Left || k == XK_a)
-                key_delta[0] = (e.type == KeyPress) ? 1.0f : 0.0f;
-            if (k == XK_Right || k == XK_d)
-                key_delta[1] = (e.type == KeyPress) ? 1.0f : 0.0f;
-            if (k == XK_Up || k == XK_w)
-                key_delta[2] = (e.type == KeyPress) ? 1.0f : 0.0f;
-            if (k == XK_Down || k == XK_s)
-                key_delta[3] = (e.type == KeyPress) ? 1.0f : 0.0f;
-
-            /* clicks */
-            if (k == XK_j || k == XK_q)
-                XTestFakeButtonEvent(display, Button1, (e.type == KeyPress) ? True : False, CurrentTime);
-            if (k == XK_k || k == XK_e)
-                XTestFakeButtonEvent(display, Button3, (e.type == KeyPress) ? True : False, CurrentTime);
-            if (k == XK_i)
-                XTestFakeButtonEvent(display, Button2, (e.type == KeyPress) ? True : False, CurrentTime);
-            if (k == XK_u)
-                XTestFakeButtonEvent(display, 8, (e.type == KeyPress) ? True : False, CurrentTime);
-            if (k == XK_o)
-                XTestFakeButtonEvent(display, 9, (e.type == KeyPress) ? True : False, CurrentTime);
-
-            /* scrolling */
-            if (k == XK_r)
-                key_delta[4] = (e.type == KeyPress) ? 1.0f : 0.0f;
-            if (k == XK_f)
-                key_delta[5] = (e.type == KeyPress) ? 1.0f : 0.0f;
-
-            /* speed adjustment from slow to fast */
-            if (k == XK_g)
-                speed = (e.type == KeyPress) ? 4 : 2;
-            if (k == XK_h || k == XK_backslash)
-                speed = (e.type == KeyPress) ? 3 : 2;
-            if (k == XK_l || k == XK_Shift_L)
-                speed = (e.type == KeyPress) ? 1 : 2;
-            if (k == XK_semicolon)
-                speed = (e.type == KeyPress) ? 0 : 2;
-
-            /* exit */
-            if (e.type == KeyRelease && (k == XK_x || k == XK_m))
+            k = XLookupKeysym(&e.xkey, 0);    
+            if (k == XK_x || k == XK_m)
             {
                 XCloseDisplay(display);
                 return 0;
@@ -102,14 +97,12 @@ int main()
         }
 
         idle = 1;
-
         if (key_delta[0] || key_delta[1] || key_delta[2] || key_delta[3])
         {
             XWarpPointer(display, None, None, 0, 0, 0, 0, (key_delta[1] - key_delta[0]), (key_delta[3] - key_delta[2]));
             XSync(display, False);
             idle = 0;
         }
-
         if (key_delta[4])
         {
             XTestFakeButtonEvent(display, Button4, True, 1);
