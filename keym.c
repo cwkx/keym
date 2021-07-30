@@ -19,6 +19,7 @@ int main()
     int num_ready_fds;
     char key_delta[6]; /* Left, Right, Up, Down, SCROLL_UP, SCROLL_DOWN */
     char speed = 2; /* Dash, Fast, Normal, Slow, Crawl */
+    char idle = 1;
 
     if (!(display = XOpenDisplay(NULL)))
     {
@@ -40,7 +41,7 @@ int main()
         FD_SET(x11_fd, &in_fds);
 
         tv.tv_sec = 0;
-        tv.tv_usec = (key_delta[4] || key_delta[5]) ? scroll[speed] : speeds[speed];
+        tv.tv_usec = (key_delta[4] || key_delta[5]) ? scroll[speed] : idle ? 10000 : speeds[speed];
 
         num_ready_fds = select(x11_fd + 1, &in_fds, NULL, NULL, &tv);
 
@@ -94,7 +95,14 @@ int main()
             e.type = 0;
         }
 
-        XWarpPointer(display, None, None, 0, 0, 0, 0, (key_delta[1] - key_delta[0]), (key_delta[3] - key_delta[2]));
+        idle = 1;
+        
+        if (key_delta[0] || key_delta[1] || key_delta[2] || key_delta[3])
+        {
+            XWarpPointer(display, None, None, 0, 0, 0, 0, (key_delta[1] - key_delta[0]), (key_delta[3] - key_delta[2]));
+            XSync(display, False);
+            idle = 0;
+        }
 
         if (key_delta[4])
         {
@@ -106,8 +114,6 @@ int main()
             XTestFakeButtonEvent(display, Button5, True, 1);
             XTestFakeButtonEvent(display, Button5, False, 1);
         }
-
-        XSync(display, False);
     }
 
     XCloseDisplay(display);
