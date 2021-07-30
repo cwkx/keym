@@ -17,7 +17,7 @@ int main()
     int screen;
     int x11_fd;
     int num_ready_fds;
-    char key_delta[6]; /* Left, Right, Up, Down, SCROLL_UP, SCROLL_DOWN */
+    char key_delta[6] = { 0 }; /* Left, Right, Up, Down, SCROLL_UP, SCROLL_DOWN */
     char speed = 2; /* Dash, Fast, Normal, Slow, Crawl */
     char idle = 1;
 
