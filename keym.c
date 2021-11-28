@@ -72,14 +72,14 @@ int main()
         /* speed adjustment from slow to fast */
         speed = 2;
         speed = (pressed(XK_g)) ? 4 : speed;
-        speed = (pressed(XK_h) || pressed(XK_backslash)) ? 3 : speed;
+        speed = (pressed(XK_h) || pressed(XK_backslash) || pressed(XK_Tab)) ? 3 : speed;
         speed = (pressed(XK_l) || pressed(XK_Shift_L)) ? 1 : speed;
         speed = (pressed(XK_semicolon)) ? 0 : speed;
 
         /* mouse clicks */
         XTestFakeButtonEvent(display, Button1, (pressed(XK_j) || pressed(XK_q)) ? True : False, CurrentTime);
         XTestFakeButtonEvent(display, Button3, (pressed(XK_k) || pressed(XK_e)) ? True : False, CurrentTime);
-        XTestFakeButtonEvent(display, Button2, pressed(XK_i) ? True : False, CurrentTime);
+        XTestFakeButtonEvent(display, Button2, (pressed(XK_i) || pressed(XK_c)) ? True : False, CurrentTime);
         XTestFakeButtonEvent(display, 8, pressed(XK_u) ? True : False, CurrentTime);
         XTestFakeButtonEvent(display, 9, pressed(XK_o) ? True : False, CurrentTime);
 
