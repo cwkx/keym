@@ -1,0 +1,72 @@
+.TH KEYM 1 dwm\-VERSION
+.SH NAME
+keym \- A utility to control mouse pointer with the help of keyboard.
+.SH SYNOPSIS
+.B keym
+\- To launch the utility.
+.SH DESCRIPTION
+This is a tool for controlling the mouse with the keyboard. It supports five speed settings with fast scrolling and smooth updates.
+.P
+The previous version (in the commit history) was written as a lua widget for awesomewm, which I used for a couple of years, but I wanted something closer to the metal for use with DWM or other WMs so rewrote this in C for X11.
+.P
+I found discrete speed settings more efficient/predictable than acceleration. I didn't want to add a config.h, as its easier to modify all the conditionals in the source code itself.
+.SH USAGE
+.BR keym
+\- Simply Execute via keyboard shortcut, terminal session or via Dmenu, Rofi, etc.
+.SS LEFT-HANDED USAGE
+.TP
+.B Basic\ Movement
+.BR W/A/S/D
+\- To Move the Mouse Pointer Up/Left/Down/Right.
+.TP
+.B Mouse\ Button\ Clicks
+.BR Q/E/C
+\- Left/Right/Middle Clicks.
+.TP
+.B Scrolling
+.BR R/F
+\- To Scroll Up/Down.
+.TP
+.B Speed\ Control
+.BR Left_Shift
+\- Hold it to move the mouse pointer at a faster speed.
+
+.BR \e
+or
+.BR Tab
+\- Hold it to move the mouse pointer at a slower speed.
+.TP
+.B Quit
+.BR X
+\- Press "X" to quit keym and return to usual keyboard mode.
+.SS TWO-HANDED USAGE
+All of the features and keybindings of
+.BR LEFT-HANDED
+Usage, plus, some extra keybindings.
+.TP
+.B Mouse\ Button\ Clicks
+.BR J/K/I
+\- Left/Right/Middle Clicks.
+.TP
+.B Speed\ Control
+.BR L
+\- Hold it to move the mouse pointer at a faster speed.
+
+.BR ;
+\- Hold it to move the mouse pointer at an extremely fast speed.
+
+.BR G
+\- Hold it to move the mouse pointer at very slow speed.
+
+.BR H
+\- Hold it to move the mouse pointer at a reasonably slower speed.
+.TP
+.B Miscellaneous
+.BR U/O
+\- Browser Back/Forward Button.
+.TP
+.B Quit
+.BR X
+or
+.BR M
+\- Press "M" or "X" to quit keym and return to usual keyboard mode.
