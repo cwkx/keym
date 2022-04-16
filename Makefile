@@ -42,8 +42,6 @@ install: all
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
 	@cp -f keym ${DESTDIR}${PREFIX}/bin
 	@chmod 755 ${DESTDIR}${PREFIX}/bin/keym
-	@sed "s/VERSION/${VERSION}/g" < keym.1 > ${DESTDIR}${MANPREFIX}/man1/keym.1
-	@chmod 644 ${DESTDIR}${MANPREFIX}/man1/keym.1
 
 uninstall:
 	@echo removing executable file from ${DESTDIR}${PREFIX}/bin

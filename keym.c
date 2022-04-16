@@ -54,6 +54,11 @@ int main()
 
         XGrabKeyboard(display, window, False, GrabModeAsync, GrabModeAsync, CurrentTime);
 
+        if (pressed(XK_k) || pressed(XK_e))
+        {
+            XUngrabKeyboard(display, CurrentTime);
+        }
+
         while (XPending(display))
             XNextEvent(display, &e);
 
