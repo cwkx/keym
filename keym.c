@@ -27,6 +27,7 @@ int main()
     char idle = 1;
     char key_delta[6] = {0}; /* left, right, up, down, scroll up, scroll down */
     char speed = 2;          /* dash, fast, normal, slow, crawl */
+    char quit = 0;
     int first_keycode, max_keycode, ks_per_keystroke;
     int num_keycodes;
     int i,j;
@@ -109,11 +110,15 @@ int main()
         XTestFakeButtonEvent(display, 9, pressed(XK_o) ? True : False, CurrentTime);
 
         /* exit */
-        if (pressed(XK_x) || pressed(XK_m))
+        if (!pressed(XK_x) && !pressed(XK_m))
+        {
+            quit = 1;
+        }
+        if (quit == 1 && (pressed(XK_x) || pressed(XK_m)))
         {
             /* restore the original mapping */
             XChangeKeyboardMapping(display, first_keycode, ks_per_keystroke, original, max_keycode-first_keycode);
-            
+
             XCloseDisplay(display);
             return 0;
         }
