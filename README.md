@@ -1,5 +1,5 @@
 # Keym
-This is a tool for controlling the mouse with the keyboard. It supports five speed settings with fast scrolling and smooth updates. A selection of keys get unmapped while the application is running. This lets you still use other keys not used by the tool, rather than naively grabbing the entire keyboard. If you want the application to fully grab all the keyboard, you can press ``Z``, but this may prevent you from interacting with certain menus.
+This is a tool for controlling the mouse with the keyboard. It supports five speed settings with fast scrolling and smooth updates. A selection of keys get unmapped while the application is running. This lets you still use other keys not used by the tool, rather than naively grabbing the entire keyboard. If you want the application to fully grab all the keyboard, you can press ``Right Control``, but this may prevent you from interacting with certain menus.
 
 ## Installation
 Install either from the makefile or compile with gcc:

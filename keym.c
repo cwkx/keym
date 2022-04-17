@@ -6,7 +6,7 @@
 
 static const int speeds[5] = {80, 400, 1400, 4000, 10000};
 static const int scroll[5] = {1000, 5000, 30000, 50000, 100000};
-static const char* unmap[] = {"w", "a", "s", "d", "q", "e", "r", "f", "g", "h", "j", "k", "l", "semicolon", "i", "c", "u", "o", "Shift_L", "backslash", "Tab", "Left", "Right", "Up", "Down", "x", "m", "z"};
+static const char* unmap[] = {"w", "a", "s", "d", "q", "e", "r", "f", "g", "h", "j", "k", "l", "semicolon", "i", "c", "u", "o", "Shift_L", "backslash", "Tab", "Left", "Right", "Up", "Down", "x", "m", "Control_R"};
 
 static Display *display;
 static char keymap[32] = {0};
@@ -119,7 +119,7 @@ int main()
         }
 
         /* option to grab whole keyboard focus - this is useful for some applications that try to do their own input handling */
-        if (pressed(XK_z))
+        if (pressed(XK_Control_R))
         {
             XGrabKeyboard(display, XDefaultRootWindow(display), False, GrabModeAsync, GrabModeAsync, CurrentTime);
         }
