@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include <string.h>
 #include <sys/select.h>
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 
 static const int speeds[5] = {80, 400, 1400, 4000, 10000};
 static const int scroll[5] = {1000, 5000, 30000, 50000, 100000};
+static const char* unmap[] = {"w", "a", "s", "d", "q", "e", "r", "f", "h", "j", "k", "l", "semicolon", "i", "u", "o", "Shift_L", "backslash", "Tab", "Left", "Right", "Up", "Down", "x", "m"};
 
 static Display *display;
 static char keymap[32] = {0};
@@ -17,17 +19,18 @@ char pressed(int keycode)
 
 int main()
 {
-    Window window;
-    XEvent e;
-    KeySym k;
+    KeySym *keysyms, *original;
     fd_set in_fds;
     struct timeval tv;
-    int screen;
     int x11_fd;
     int num_ready_fds;
     char idle = 1;
     char key_delta[6] = {0}; /* left, right, up, down, scroll up, scroll down */
     char speed = 2;          /* dash, fast, normal, slow, crawl */
+    int first_keycode, max_keycode, ks_per_keystroke;
+    int num_keycodes;
+    int i,j;
+    int len = sizeof(unmap)/sizeof(unmap[0]);
 
     if (!(display = XOpenDisplay(NULL)))
     {
@@ -35,13 +38,39 @@ int main()
         return 1;
     }
 
-    window = XDefaultRootWindow(display);
-    screen = DefaultScreen(display);
-
-    XSelectInput(display, window, ExposureMask | KeyPressMask);
-    XMapWindow(display, window);
-
     x11_fd = ConnectionNumber(display);
+
+    /* get the full keymap and keep a backup of the original to restore when we're done */
+    XDisplayKeycodes(display, &first_keycode, &max_keycode);
+    num_keycodes = max_keycode - first_keycode + 1;
+
+    original = XGetKeyboardMapping(display, first_keycode, num_keycodes, &ks_per_keystroke);
+    keysyms  = XGetKeyboardMapping(display, first_keycode, num_keycodes, &ks_per_keystroke);
+
+    for (i=0; i<num_keycodes; ++i)
+    {
+        if (keysyms[i*ks_per_keystroke] != NoSymbol)
+        {
+            KeySym ks = keysyms[i*ks_per_keystroke];
+            const char* keysym_str = XKeysymToString(ks);
+
+            /* uncomment if you want a list of strings for unmapping
+            printf("%s\n", keysym_str);
+            fflush(stdout);
+             */
+
+            for (j=0; j<len; ++j)
+            {
+                if (strcmp(keysym_str, unmap[j]) == 0)
+                {
+                    keysyms[i*ks_per_keystroke] = NoSymbol;
+                }
+            }
+        }
+    }
+
+    /* unmap the select keys */
+    XChangeKeyboardMapping(display, first_keycode, ks_per_keystroke, keysyms, max_keycode-first_keycode);
 
     while (1)
     {
@@ -51,16 +80,6 @@ int main()
         tv.tv_sec = 0;
         tv.tv_usec = (key_delta[4] || key_delta[5]) ? scroll[speed] : idle ? 50000 : speeds[speed];
         num_ready_fds = select(x11_fd + 1, &in_fds, NULL, NULL, &tv);
-
-        XGrabKeyboard(display, window, False, GrabModeAsync, GrabModeAsync, CurrentTime);
-
-        if (pressed(XK_k) || pressed(XK_e))
-        {
-            XUngrabKeyboard(display, CurrentTime);
-        }
-
-        while (XPending(display))
-            XNextEvent(display, &e);
 
         XQueryKeymap(display, keymap);
 
@@ -89,15 +108,12 @@ int main()
         XTestFakeButtonEvent(display, 9, pressed(XK_o) ? True : False, CurrentTime);
 
         /* exit */
-        if (e.type == KeyRelease)
+        if (pressed(XK_x) || pressed(XK_m))
         {
-            k = XLookupKeysym(&e.xkey, 0);
-            if (k == XK_x || k == XK_m)
-            {
-                XCloseDisplay(display);
-                return 0;
-            }
-            e.type = 0;
+            /* restore the original mapping */
+            XChangeKeyboardMapping(display, first_keycode, ks_per_keystroke, original, max_keycode-first_keycode);
+            XCloseDisplay(display);
+            return 0;
         }
 
         idle = 1;
