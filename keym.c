@@ -6,7 +6,7 @@
 
 static const int speeds[5] = {80, 400, 1400, 4000, 10000};
 static const int scroll[5] = {1000, 5000, 30000, 50000, 100000};
-static const char* unmap[] = {"w", "a", "s", "d", "q", "e", "r", "f", "h", "j", "k", "l", "semicolon", "i", "u", "o", "Shift_L", "backslash", "Tab", "Left", "Right", "Up", "Down", "x", "m"};
+static const char* unmap[] = {"w", "a", "s", "d", "q", "e", "r", "f", "g", "h", "j", "k", "l", "semicolon", "i", "c", "u", "o", "Shift_L", "backslash", "Tab", "Left", "Right", "Up", "Down", "x", "m", "z"};
 
 static Display *display;
 static char keymap[32] = {0};
@@ -47,6 +47,7 @@ int main()
     original = XGetKeyboardMapping(display, first_keycode, num_keycodes, &ks_per_keystroke);
     keysyms  = XGetKeyboardMapping(display, first_keycode, num_keycodes, &ks_per_keystroke);
 
+    /* unmap a selection of keys */
     for (i=0; i<num_keycodes; ++i)
     {
         if (keysyms[i*ks_per_keystroke] != NoSymbol)
@@ -69,7 +70,7 @@ int main()
         }
     }
 
-    /* unmap the select keys */
+    /* do the unmapping */
     XChangeKeyboardMapping(display, first_keycode, ks_per_keystroke, keysyms, max_keycode-first_keycode);
 
     while (1)
@@ -112,8 +113,15 @@ int main()
         {
             /* restore the original mapping */
             XChangeKeyboardMapping(display, first_keycode, ks_per_keystroke, original, max_keycode-first_keycode);
+            
             XCloseDisplay(display);
             return 0;
+        }
+
+        /* option to grab whole keyboard focus - this is useful for some applications that try to do their own input handling */
+        if (pressed(XK_z))
+        {
+            XGrabKeyboard(display, XDefaultRootWindow(display), False, GrabModeAsync, GrabModeAsync, CurrentTime);
         }
 
         idle = 1;
