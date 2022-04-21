@@ -62,12 +62,8 @@ int main()
              */
 
             for (j=0; j<len; ++j)
-            {
                 if (strcmp(keysym_str, unmap[j]) == 0)
-                {
                     keysyms[i*ks_per_keystroke] = NoSymbol;
-                }
-            }
         }
     }
 
@@ -111,23 +107,19 @@ int main()
 
         /* exit */
         if (!pressed(XK_x) && !pressed(XK_m))
-        {
             quit = 1;
-        }
+
         if (quit == 1 && (pressed(XK_x) || pressed(XK_m)))
         {
             /* restore the original mapping */
             XChangeKeyboardMapping(display, first_keycode, ks_per_keystroke, original, max_keycode-first_keycode);
-
             XCloseDisplay(display);
             return 0;
         }
 
         /* option to grab whole keyboard focus - this is useful for some applications that try to do their own input handling */
         if (pressed(XK_Control_R))
-        {
             XGrabKeyboard(display, XDefaultRootWindow(display), False, GrabModeAsync, GrabModeAsync, CurrentTime);
-        }
 
         idle = 1;
         if (key_delta[0] || key_delta[1] || key_delta[2] || key_delta[3])
