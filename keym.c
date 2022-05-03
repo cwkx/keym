@@ -4,8 +4,9 @@
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 
-static const int speeds[5] = {80, 400, 1400, 4000, 10000};
-static const int scroll[5] = {1000, 5000, 30000, 50000, 100000};
+static const int idle_cutoff = 500; /* time before program exits by itself if no usage detected */
+static const int speeds[5] = {80, 400, 1400, 4000, 10000}; /* mouse movement speeds */
+static const int scroll[5] = {1000, 5000, 30000, 50000, 100000}; /* scrolling speeds */
 static const char* unmap[] = {"w", "a", "s", "d", "q", "e", "r", "f", "g", "h", "j", "k", "l", "semicolon", "i", "c", "u", "o", "Shift_L", "backslash", "Tab", "Left", "Right", "Up", "Down", "x", "m", "Control_R"};
 
 static Display *display;
@@ -32,6 +33,7 @@ int main()
     int num_keycodes;
     int i,j;
     int len = sizeof(unmap)/sizeof(unmap[0]);
+    int zzz = 0;
 
     if (!(display = XOpenDisplay(NULL)))
     {
@@ -109,7 +111,7 @@ int main()
         if (!pressed(XK_x) && !pressed(XK_m))
             quit = 1;
 
-        if (quit == 1 && (pressed(XK_x) || pressed(XK_m)))
+        if (++zzz > idle_cutoff || (quit == 1 && (pressed(XK_x) || pressed(XK_m))))
         {
             /* restore the original mapping */
             XChangeKeyboardMapping(display, first_keycode, ks_per_keystroke, original, max_keycode-first_keycode);
@@ -127,16 +129,19 @@ int main()
             XWarpPointer(display, None, None, 0, 0, 0, 0, (key_delta[1] - key_delta[0]), (key_delta[3] - key_delta[2]));
             XSync(display, False);
             idle = 0;
+	    zzz = 0;
         }
         if (key_delta[4])
         {
             XTestFakeButtonEvent(display, Button4, True, 1);
             XTestFakeButtonEvent(display, Button4, False, 1);
+	    zzz = 0;
         }
         else if (key_delta[5])
         {
             XTestFakeButtonEvent(display, Button5, True, 1);
             XTestFakeButtonEvent(display, Button5, False, 1);
+	    zzz = 0;
         }
     }
 
