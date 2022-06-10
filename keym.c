@@ -33,7 +33,6 @@ int main()
     int num_keycodes;
     int i,j;
     int len = sizeof(unmap)/sizeof(unmap[0]);
-    int zzz = 0;
 
     if (!(display = XOpenDisplay(NULL)))
     {
@@ -111,7 +110,7 @@ int main()
         if (!pressed(XK_x) && !pressed(XK_m))
             quit = 1;
 
-        if (++zzz > idle_cutoff || (quit == 1 && (pressed(XK_x) || pressed(XK_m))))
+        if (quit == 1 && (pressed(XK_x) || pressed(XK_m)))
         {
             /* restore the original mapping */
             XChangeKeyboardMapping(display, first_keycode, ks_per_keystroke, original, max_keycode-first_keycode);
@@ -129,19 +128,16 @@ int main()
             XWarpPointer(display, None, None, 0, 0, 0, 0, (key_delta[1] - key_delta[0]), (key_delta[3] - key_delta[2]));
             XSync(display, False);
             idle = 0;
-	    zzz = 0;
         }
         if (key_delta[4])
         {
             XTestFakeButtonEvent(display, Button4, True, 1);
             XTestFakeButtonEvent(display, Button4, False, 1);
-	    zzz = 0;
         }
         else if (key_delta[5])
         {
             XTestFakeButtonEvent(display, Button5, True, 1);
             XTestFakeButtonEvent(display, Button5, False, 1);
-	    zzz = 0;
         }
     }
 
